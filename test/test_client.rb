@@ -844,4 +844,33 @@ class TestClient < MiniTest::Test
       }
     GRAPHQL
   end
+
+  def test_dynamic_operation_name_query
+    query = @client.parse(<<-'GRAPHQL')
+      query Viewer {
+        viewer {
+          id
+        }
+      }
+    GRAPHQL
+
+    if RUBY_VERSION < "3.0"
+      assert_equal <<-"GRAPHQL".gsub(/^        /, "").chomp, query::Viewer.document.to_query_string
+        query GraphQL__Client__OperationDefinition_#{query::Viewer.object_id} {
+          viewer {
+            id
+          }
+        }
+      GRAPHQL
+    else
+      ptr = query::Viewer.name.gsub(/^.*Module:/, "").gsub(/>.*$/, "")
+      assert_equal <<-"GRAPHQL".gsub(/^        /, "").chomp, query::Viewer.document.to_query_string
+        query Module_#{ptr}__Viewer {
+          viewer {
+            id
+          }
+        }
+      GRAPHQL
+    end
+  end
 end

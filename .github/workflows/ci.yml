@@ -12,9 +12,13 @@ jobs:
         ruby_version:
           - 2.5.x
           - 2.6.x
+          - 2.7.x
+          - 3.0.x
+          - 3.1.x
         graphql_version:
           - 1.10.14
           - 1.11.1
+          - 1.12.14
         rails_version:
           - "~> 5.2.0"
           - "~> 6.0.0"
